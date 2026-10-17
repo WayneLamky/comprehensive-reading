@@ -1,0 +1,174 @@
+{
+  "document": {
+    "title": "Day-2 cell area predicts doubling time (example mini-study)",
+    "subtitle": "示例：读懂一篇小型研究摘要",
+    "source": "示例文本，虚构",
+    "venue": "examples/study_paper/source.md",
+    "year": "2026",
+    "kind": "paper",
+    "kicker": "PAPER · 精读示例 · 七问卡片 + 固定七字段",
+    "key": "example-study"
+  },
+  "reader": {
+    "starting_point": "读者养过细胞，知道 PDT 大概是「细胞翻倍要多久」，但没接触过回归和交叉验证。",
+    "prerequisites": [
+      {"concept": "输入 X 与目标 Y", "why": "整篇研究就是「用 X 猜 Y」", "where": "U1"},
+      {"concept": "独立样本是谁", "why": "12 个孔来自 3 位供者，不是 12 个独立的人", "where": "U2"}
+    ]
+  },
+  "thesis": "在这 3 位供者里，第 2 天的平均细胞面积能部分预测之后一周的 PDT；但因为同一供者的孔同时出现在训练和测试里，它没有证明模型能用到新供者。",
+  "argument_map": [
+    {"label": "问题", "en": "Question", "text": "第 2 天的平均细胞面积能不能预测接下来一周的 PDT？", "anchor": "¶1"},
+    {"label": "样本", "en": "Samples", "text": "3 位供者 × 4 孔 = 12 孔，每孔第 2 天拍一张相差照片。", "anchor": "¶2"},
+    {"label": "X 与 Y", "en": "Measurements", "text": "X：每孔第 2 天的平均细胞面积；Y：第 2 到第 9 天算出的 PDT。", "anchor": "¶3"},
+    {"label": "分析", "en": "Analysis", "text": "线性回归；按孔留一交叉验证，MAE 4.1 h，空模型 7.9 h。", "anchor": "¶4"},
+    {"label": "解释", "en": "Interpretation", "text": "面积含有生长信息；但没有证明跨供者。", "anchor": "¶5"}
+  ],
+  "sample_audit": [
+    {"label": "供者", "value": "3", "note": "真正独立的生物学单位"},
+    {"label": "孔", "value": "12", "note": "3 × 4，是回归的行"},
+    {"label": "每孔照片", "value": "1", "note": "只有第 2 天一张"}
+  ],
+  "card": {
+    "mode": "study",
+    "study": {
+      "question": {"text": "第 2 天的平均细胞面积能否预测之后一周的 PDT？", "anchor": "¶1"},
+      "x": {"text": "每孔第 2 天相差照片算出的平均细胞面积（1 个数）。", "anchor": "¶3"},
+      "y": {"text": "每孔由第 2 天和第 9 天细胞计数算出的 PDT（小时）。", "anchor": "¶3"},
+      "independent_unit": {"text": "名义上 12 孔；真正独立的是 **3 位供者**。", "anchor": "¶2"},
+      "validation": {"text": "线性回归 + 按孔留一；留出一个孔时，同供者的另外 3 孔仍在训练集。", "anchor": "¶4"},
+      "proves": {"text": "在这 3 位供者内部，面积与 PDT 有可建模的关系（MAE 4.1 h 好于空模型 7.9 h）。", "anchor": "¶4–¶5"},
+      "cannot_prove": {"text": "对新供者有效；面积导致生长变化；换成其他形态指标也行。", "anchor": "¶5"}
+    }
+  },
+  "units": [
+    {
+      "id": "U1",
+      "title_zh": "X 和 Y：用什么猜什么",
+      "title_en": "X and Y",
+      "goal": "对着一个孔说出：它的 X 是哪个数、Y 是哪个数、两者相隔几天。",
+      "status": "now",
+      "concept": "预测研究就是一张表：每行一个样本，左边 X，右边 Y。",
+      "rail_tag": "¶1–¶3",
+      "blocks": [
+        {
+          "kind": "lesson",
+          "heading": "1. 为什么要关心这个问题",
+          "paragraphs": ["细胞长得快不快（`PDT`）要等一周才知道。如果第 2 天的一张照片就能提前估出来，就能早一点决定这批细胞要不要继续养。"],
+          "anchor": "¶1"
+        },
+        {
+          "kind": "lesson",
+          "heading": "2. 一个孔一行数据",
+          "bullets": [
+            "X（输入）：第 2 天照片里所有细胞的平均面积，单位 µm²。",
+            "Y（目标）：第 2 天到第 9 天细胞数翻倍一次要多少小时。",
+            "一共 12 行：3 位供者，每人 4 个孔。"
+          ],
+          "anchor": ["¶2", "¶3"]
+        },
+        {
+          "kind": "analogy",
+          "paragraphs": ["像是看一个人第一天上班的状态，猜他一周后的工作量。X 是第一天的观察，Y 是一周后的事实。"]
+        }
+      ],
+      "terms": [
+        {"en": "PDT", "zh": "population doubling time，细胞数量翻倍所需时间；越长长得越慢"},
+        {"en": "phase-contrast", "zh": "相差显微镜，不染色看活细胞"}
+      ],
+      "check": {
+        "q": "如果把第 9 天的细胞计数也放进 X，会出什么问题？",
+        "expected": ["要点：Y 就是由第 9 天计数算出来的，把它放进 X 等于把答案告诉模型，预测失去意义。"]
+      }
+    },
+    {
+      "id": "U2",
+      "title_zh": "Figure 1 与验证：留的是孔，不是供者",
+      "title_en": "Figure 1 and validation",
+      "goal": "能读 Figure 1，并说出「按孔留一」证明了什么、没证明什么。",
+      "status": "ready",
+      "rail_tag": "Figure 1 · ¶4–¶5",
+      "blocks": [
+        {
+          "kind": "figure",
+          "number": "Figure 1",
+          "title_zh": "面积越大，PDT 越长",
+          "title_en": "Average area against PDT, twelve wells",
+          "image": "figure-1.svg",
+          "caption": "示例自绘图（本仓库 figure-1.svg），按原文图注重画；不是任何论文的原图。",
+          "takeaway": "点大致沿一条上升的线排列：第 2 天细胞越大，之后长得越慢。",
+          "question": "第 2 天的平均面积和之后的 PDT 之间有没有看得见的关系？",
+          "provenance": [
+            "12 个孔，每孔第 2 天一张相差照片，算出平均细胞面积。",
+            "每孔第 2 天和第 9 天各数一次细胞，算出 PDT。"
+          ],
+          "reading": [
+            "横轴：平均面积（µm²）；纵轴：PDT（小时），越高长得越慢。",
+            "圆形、方形、三角形分别是供者 A、B、C；虚线是拟合直线。"
+          ],
+          "observations": [
+            "三位供者的点分布在横轴的不同区段：A 偏小、C 偏大。",
+            "整体趋势向上，但同一供者内部的 4 个点也各自沿趋势排列。"
+          ],
+          "claim": "作者据此认为第 2 天面积含有关于一周后生长的信息。",
+          "limitation": "三位供者恰好占据不同的面积区段，趋势可能部分来自供者差异而非细胞状态；这张图分不开这两种解释。",
+          "glossary": [{"zh": "拟合直线", "en": "fitted line"}, {"zh": "散点图", "en": "scatter plot"}],
+          "callout": "不要把「点沿直线排列」直接读成「面积决定生长」。图只显示相关。",
+          "anchor": ["Figure 1 图注", "¶3"]
+        },
+        {
+          "kind": "lesson",
+          "heading": "2. 验证方式：按孔留一",
+          "paragraphs": [
+            "12 个孔，每次留出 1 个，用剩下 11 个拟合，再预测这 1 个；轮 12 次。平均绝对误差 4.1 小时，而「永远猜平均值」的空模型是 7.9 小时。",
+            "关键在于被留出的是一个**孔**。留出供者 A 的第 1 孔时，A 的另外 3 孔还在训练集里。所以模型在预测时已经「见过」这位供者。"
+          ],
+          "anchor": "¶4"
+        },
+        {
+          "kind": "bilingual",
+          "heading": "原文对照：作者自己划的边界",
+          "original": "Because wells from the same donor appear in both training and test folds, the result does not show that the model transfers to a new donor.",
+          "zh": "由于同一供者的孔同时出现在训练折和测试折中，这个结果不能说明模型可以迁移到新供者。",
+          "anchor": "¶5"
+        }
+      ],
+      "terms": [
+        {"en": "leave-one-out", "zh": "留一法：每次留出一个样本做测试"},
+        {"en": "MAE", "zh": "mean absolute error，平均绝对误差；越小越好"},
+        {"en": "null model", "zh": "空模型：不看 X，永远猜平均值，用作底线"}
+      ],
+      "check": {
+        "q": "要证明模型对新供者有效，验证应该怎样改？",
+        "hint": "想一想留出的单位。",
+        "expected": ["要点：按供者留出，一次把某位供者的全部 4 孔都拿出来测。"]
+      }
+    }
+  ],
+  "verdict": {
+    "supports": [
+      {"text": "在这 3 位供者内部，第 2 天面积与之后 PDT 存在可建模的关系。", "anchor": "¶4"},
+      {"text": "模型好于空模型（4.1 h 对 7.9 h）。", "anchor": "¶4"}
+    ],
+    "does_not_show": [
+      {"text": "对新供者有效：验证按孔留一，供者始终在训练集里。", "anchor": "¶5"},
+      {"text": "面积「导致」生长变慢：只有相关。", "anchor": "Figure 1 图注"},
+      {"text": "其他时间点或其他形态指标也有效：原文只测了第 2 天的平均面积。", "anchor": "¶3"}
+    ]
+  },
+  "takeaways": [
+    {"text": "预测研究先找 X、Y 和它们相隔的时间。", "anchor": "¶3"},
+    {"text": "验证时「留出的单位」决定了结论能推广到哪一层。", "anchor": "¶4–¶5"}
+  ],
+  "questions": [
+    {"q": "为什么空模型的 7.9 h 很重要？", "a": "它是底线。任何模型都得先赢过「不看 X 直接猜平均」，否则说明 X 没提供信息。", "anchor": "¶4"}
+  ],
+  "glossary": [
+    {"zh": "群体倍增时间", "en": "population doubling time, PDT", "note": "细胞数量翻倍所需时间"},
+    {"zh": "留一交叉验证", "en": "leave-one-out cross-validation", "note": "每次留出一个单位做测试，轮流进行"},
+    {"zh": "空模型", "en": "null model", "note": "永远预测平均值的基线"},
+    {"zh": "平均绝对误差", "en": "mean absolute error, MAE", "note": "预测值与真实值差距的平均"},
+    {"zh": "供者", "en": "donor", "note": "细胞来源的个体，本研究中真正独立的单位"}
+  ],
+  "source_note": "本示例的源文本是虚构的演示材料（examples/study_paper/source.md）；Figure 1 为本仓库自绘 SVG，不含任何受版权保护的论文原图。"
+}

@@ -1,0 +1,7 @@
+# source documents and extracted pages never belong in the repo
+*.pdf
+pages/
+out/
+.DS_Store
+__pycache__/
+.claude/

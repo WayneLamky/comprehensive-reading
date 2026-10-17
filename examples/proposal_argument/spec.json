@@ -1,0 +1,174 @@
+{
+  "document": {
+    "title": "Donor-transferable morphology model (example proposal excerpt)",
+    "subtitle": "示例：读懂一份研究计划摘录",
+    "source": "示例文本，虚构",
+    "venue": "examples/proposal_argument/source.md",
+    "year": "2026",
+    "kind": "proposal",
+    "kicker": "PROPOSAL · 精读示例 · 主张—依据—边界",
+    "key": "example-proposal"
+  },
+  "reader": {
+    "starting_point": "读者没有机器学习背景，知道细胞培养的大致流程，但不清楚「训练」「测试」「泛化」是什么意思。",
+    "prerequisites": [
+      {"concept": "训练 / 测试", "why": "整份计划的核心是「训练过的模型在没见过的数据上还准不准」", "where": "U1"},
+      {"concept": "供者（donor）作为独立样本", "why": "计划按供者划分数据，不按照片划分", "where": "U2"}
+    ]
+  },
+  "thesis": "这份计划只想回答一个问题：一个用某些供者的细胞训练出来的形态模型，换到新供者的细胞上还准不准；它没有承诺模型能用于所有病人。",
+  "argument_map": [
+    {"label": "现状", "en": "Background", "text": "已有流程只在训练用过的供者上报告效果。", "anchor": "¶1"},
+    {"label": "空白", "en": "Gap", "text": "没有在新供者上测过，就分不清模型学的是细胞的性质还是供者的性质。", "anchor": "¶2"},
+    {"label": "目标", "en": "Aim", "text": "检验模型在新供者细胞上是否保持准确。", "anchor": "¶3"},
+    {"label": "设计", "en": "Design", "text": "12 位供者，8 位训练、4 位留出测试；测试供者的任何图像不参与训练和选模型。", "anchor": "¶4"},
+    {"label": "判定标准", "en": "Expected outcome", "text": "留出供者的准确率与训练供者相差不超过 10 个百分点，就算「可跨供者」。", "anchor": "¶5"},
+    {"label": "边界", "en": "Limitations", "text": "供者少；4 位留出供者不能代表全体病人；不含患病供者。", "anchor": "¶6"}
+  ],
+  "card": {
+    "mode": "argument",
+    "claims": [
+      {"claim": "现有流程的效果可能被高估", "evidence": "它们只在训练用过的供者上报告性能", "boundary": "计划没有列出具体是哪些流程、高估多少", "anchor": "¶1–¶2"},
+      {"claim": "按供者留出测试可以回答「学到的是细胞还是供者」", "evidence": "8 训练 / 4 测试，测试供者的图像不进入训练与选模", "boundary": "4 位测试供者太少，结论只对这 12 位供者成立", "anchor": "¶4, ¶6"},
+      {"claim": "相差 ≤10 个百分点即视为可跨供者", "evidence": "计划自定的判定标准", "boundary": "10 这个阈值是作者设定，不是公认标准；原文未说明为什么选 10", "anchor": "¶5"}
+    ]
+  },
+  "units": [
+    {
+      "id": "U1",
+      "title_zh": "为什么要在「没见过的供者」上测",
+      "title_en": "Why test on unseen donors",
+      "goal": "不用术语说出：在训练过的供者上准，不等于在新供者上准。",
+      "status": "now",
+      "concept": "训练数据与测试数据必须分开，而且分开的单位要是「供者」。",
+      "rail_tag": "¶1–¶3",
+      "blocks": [
+        {
+          "kind": "lesson",
+          "heading": "1. 为什么要关心这个问题",
+          "paragraphs": [
+            "细胞在用于治疗之前要先判断质量。现在越来越多的实验室让电脑看显微镜照片来做这个判断（`automated image analysis`）。",
+            "问题在于：大多数已发表的流程，只在**训练时用过的那些供者**的细胞上报告准确率。"
+          ],
+          "anchor": "¶1"
+        },
+        {
+          "kind": "lesson",
+          "heading": "2. 难点：准，可能准错了对象",
+          "paragraphs": [
+            "如果模型从来没在新供者的细胞上试过，我们就分不清它学会的是「好细胞长什么样」，还是「A 供者的细胞长什么样」。后者换个人就失效。"
+          ],
+          "anchor": "¶2"
+        },
+        {
+          "kind": "analogy",
+          "heading": "打个比方",
+          "paragraphs": ["老师只用课堂上讲过的例题考学生，学生全对，不代表他会做新题。要换一套没见过的题目才知道他学会了没有。"]
+        },
+        {
+          "kind": "bilingual",
+          "heading": "原文对照：计划的目标句",
+          "original": "This project will test whether a label-free morphology model trained on cells from a set of donors keeps its accuracy on cells from new donors.",
+          "zh": "本项目将检验：用一组供者的细胞训练出的无标记形态模型，在新供者的细胞上是否保持准确。",
+          "anchor": "¶3",
+          "note": "注意「keeps its accuracy」只是说保持准确，没有说「更准」或「对所有人都准」。"
+        }
+      ],
+      "terms": [
+        {"en": "label-free", "zh": "无标记：不染色、不加荧光，直接拍活细胞"},
+        {"en": "donor", "zh": "供者：细胞来自哪一个人"},
+        {"en": "accuracy", "zh": "准确率：模型判断对的比例"}
+      ],
+      "check": {
+        "q": "一个模型在训练供者的细胞上准确率 95%。为什么这个数字还不能说明它对下一位病人也管用？",
+        "hint": "想一想：模型可能记住了什么。",
+        "expected": ["要点：它可能记住的是这几位供者的特征，而不是细胞质量本身；只有在没见过的供者上测过，才知道。"]
+      },
+      "qa": [
+        {
+          "n": 1,
+          "date": "示例",
+          "question": "「准确率」和「泛化」是一回事吗？",
+          "answer": ["不是。准确率是一个数字，说模型在某一批数据上答对了多少；泛化说的是这个数字换到新数据上还能不能保持。计划里真正关心的是后者，所以才要把 4 位供者留出来。"],
+          "anchor": "¶3–¶4",
+          "summary": "准确率是数字，泛化是这个数字换数据后还能否保持"
+        }
+      ]
+    },
+    {
+      "id": "U2",
+      "title_zh": "设计：8 位训练，4 位留出",
+      "title_en": "Design: eight donors to train, four held out",
+      "goal": "能画出 12 位供者怎样分成两组，并说出「不进入训练」具体指什么。",
+      "status": "ready",
+      "concept": "独立样本是供者，不是照片。",
+      "rail_tag": "¶4–¶5",
+      "blocks": [
+        {
+          "kind": "table",
+          "heading": "1. 谁训练、谁测试",
+          "columns": ["组", "供者数", "用途", "原文怎么说"],
+          "rows": [
+            ["训练组", "8", "训练模型、选模型", "trained on eight donors"],
+            ["测试组", "4", "只在最后测一次", "No image from a test donor will be used during training or model selection"]
+          ],
+          "note": "每位供者在扩增第 1–4 天各拍一次。",
+          "anchor": "¶4"
+        },
+        {
+          "kind": "diagram",
+          "text": "12 位供者 → 按供者切开 → 8 位：训练 + 选模型 → 4 位：只测一次 → 比较两组准确率",
+          "caption": "按计划 ¶4–¶5 重画的流程，不是原文的图。",
+          "anchor": "¶4–¶5"
+        },
+        {
+          "kind": "callout",
+          "heading": "最容易读错的地方",
+          "paragraphs": ["「不进入训练」包括不用来选模型。很多流程会用测试数据来挑参数，这样测出来的准确率就偏高。计划特意写了 model selection 这一句。"],
+          "anchor": "¶4"
+        },
+        {
+          "kind": "lesson",
+          "heading": "2. 怎样算「可跨供者」",
+          "paragraphs": ["计划自己定了一条线：留出供者的准确率比训练供者低不超过 10 个百分点，就算过关。这是作者定的阈值，原文没有解释为什么是 10。"],
+          "anchor": ["¶5", "原文未说明"]
+        }
+      ],
+      "terms": [
+        {"en": "held-out", "zh": "留出的：训练时完全不碰的那部分数据"},
+        {"en": "model selection", "zh": "选模型：比较几个候选模型或参数，挑一个"}
+      ],
+      "check": {
+        "q": "如果研究者先看了 4 位测试供者的结果，再回头调整模型，最后报告的准确率会出什么问题？",
+        "expected": ["要点：测试供者就不再是「没见过的」了，准确率会偏高；计划 ¶4 正是为了防止这件事。"]
+      }
+    }
+  ],
+  "verdict": {
+    "supports": [
+      {"text": "按供者留出是回答「能否跨供者」的合理设计。", "anchor": "¶4"},
+      {"text": "作者明确承认供者少、不含患病供者。", "anchor": "¶6"}
+    ],
+    "does_not_show": [
+      {"text": "模型对全体病人有效：只有 12 位供者，测试只有 4 位。", "anchor": "¶6"},
+      {"text": "10 个百分点这条线是公认标准：原文未说明来源。", "anchor": "原文未说明"},
+      {"text": "任何实际结果：这是计划，还没有数据。", "anchor": "¶5"}
+    ]
+  },
+  "takeaways": [
+    {"text": "在训练用过的供者上准确，不等于在新供者上准确。", "anchor": "¶1–¶2"},
+    {"text": "要回答「能否跨供者」，划分数据的单位必须是供者。", "anchor": "¶4"},
+    {"text": "计划设定的判定线（10 个百分点）是作者的选择，读的时候要记住它不是定律。", "anchor": "¶5"}
+  ],
+  "questions": [
+    {"q": "为什么不能按照片随机划分训练和测试？", "a": "同一位供者的照片会同时出现在两边，模型可以靠记住供者来「作弊」，测出来的准确率说明不了跨供者的问题。", "anchor": "¶2, ¶4"}
+  ],
+  "glossary": [
+    {"zh": "无标记", "en": "label-free", "note": "不染色、不加荧光标记，直接对活细胞成像"},
+    {"zh": "供者", "en": "donor", "note": "细胞来源的个体；本计划中是划分数据的单位"},
+    {"zh": "留出", "en": "held-out", "note": "训练和选模型时完全不使用的数据"},
+    {"zh": "泛化", "en": "generalisation", "note": "模型在没见过的数据上保持表现的能力"},
+    {"zh": "选模型", "en": "model selection", "note": "在多个候选模型或参数之间做选择的过程"}
+  ],
+  "source_note": "本示例的源文本是虚构的演示材料（examples/proposal_argument/source.md），锚点 ¶1–¶6 指向该文件的段落编号。页面不包含任何受版权保护的论文原图。"
+}
